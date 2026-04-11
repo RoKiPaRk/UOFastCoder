@@ -14,6 +14,9 @@ pip install uofast-mcp
 uofast-mcp 
 **Follow the setup on localhost:8000 to setup UOFastMCP connection to U2 connection**
 
+view instructions here: [UOFastMCP GitHub](https://github.com/RoKiPaRk/UOFastMCP)
+
+
 ### 2. Connect Claude Code to it
 
 Add to `.mcp.json` in your project root:
