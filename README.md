@@ -11,11 +11,10 @@ Write BASIC programs, generate Python ORM code, build web forms, and create repo
 
 ```bash
 pip install uofast-mcp
-uofast-mcp 
-**Follow the setup on localhost:8000 to setup UOFastMCP connection to U2 connection**
+uofast-mcp
+```
 
-view instructions here: [UOFastMCP GitHub](https://github.com/RoKiPaRk/UOFastMCP)
-
+Follow the setup wizard at `localhost:8000` to configure the U2 connection. See [UOFastMCP GitHub](https://github.com/RoKiPaRk/UOFastMCP) for full instructions.
 
 ### 2. Connect Claude Code to it
 
