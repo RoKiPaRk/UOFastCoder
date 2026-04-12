@@ -8,8 +8,12 @@
   "plugins": [
     {
       "name": "UOFastCoder",
-      "source": "https://github.com/RoKiPaRk/UOFastCoder",
-      "description": "Generates UniBasic programs, Python UopyModel code, web forms, and reports from live DICT definitions via the UOFastMCP server."
+      "version": "1.0.0",
+      "description": "Generates UniBasic programs, Python UopyModel code, web forms, and reports from live DICT definitions via the UOFastMCP server.",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/RoKiPaRk/UOFastCoder.git"
+      }
     }
   ]
 }
