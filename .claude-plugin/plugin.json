@@ -10,6 +10,5 @@
   "repository": "https://github.com/RoKiPaRk/UOFastCoder",
   "license": "MIT",
   "keywords": ["unidata", "universe", "u2", "uopy", "multivalue", "database"],
-  "skills": "./skills/",
-  "agents": "./agents/"
+  "skills": "./skills/"
 }
