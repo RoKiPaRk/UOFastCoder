@@ -1,10 +1,14 @@
 {
   "name": "UOFastCoder",
   "description": "AI-powered development tools for U2 Unidata and Universe databases.",
+  "owner": {
+    "name": "RoKiPaRk",
+    "url": "https://github.com/RoKiPaRk"
+  },
   "plugins": [
     {
       "name": "UOFastCoder",
-      "path": ".",
+      "source": ".",
       "description": "Generates UniBasic programs, Python UopyModel code, web forms, and reports from live DICT definitions via the UOFastMCP server."
     }
   ]
