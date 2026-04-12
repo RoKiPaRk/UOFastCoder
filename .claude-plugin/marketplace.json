@@ -1,0 +1,11 @@
+{
+  "name": "UOFastCoder",
+  "description": "AI-powered development tools for U2 Unidata and Universe databases.",
+  "plugins": [
+    {
+      "name": "UOFastCoder",
+      "path": ".",
+      "description": "Generates UniBasic programs, Python UopyModel code, web forms, and reports from live DICT definitions via the UOFastMCP server."
+    }
+  ]
+}
