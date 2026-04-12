@@ -37,7 +37,15 @@ claude plugin marketplace add https://github.com/RoKiPaRk/UOFastCoder.git
 claude plugin install UOFastCoder@RoKiPaRk/UOFastCoder
 ```
 
-### 4. Document your database (one-time setup)
+### 4. Inject MCP settings (one-time setup)
+
+```
+/uo-setup
+```
+
+This fetches the connection config (URL + auth token) from your running UOFastMCP instance and writes it into Claude Desktop and your project `.mcp.json` automatically. Restart Claude Desktop once after running this.
+
+### 5. Document your database (one-time setup)
 
 ```
 /uo-document --all
@@ -53,6 +61,7 @@ That's it. You're ready.
 
 | Command | What it does |
 |---|---|
+| `/uo-setup [--desktop] [--project] [--all]` | Inject UOFastMCP connection config into Claude Desktop + `.mcp.json` |
 | `/uo-document [FILE...] [--logic [PROG...]] [--all]` | Build schema + business logic memory docs |
 | `/uo-explore <FILE>` | Explain a file's structure, fields, and relationships |
 | `/uo-basic <PROG> <FILE> [description]` | Write or modify a UniBasic program |
