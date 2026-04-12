@@ -34,7 +34,8 @@ Add to `.mcp.json` in your project root:
 ### 3. Install the plugin
 
 ```bash
-claude plugin install UOFastCoder@github:RoKiPaRk/UOFastCoder
+claude plugin marketplace add https://github.com/RoKiPaRk/UOFastCoder.git
+claude plugin install UOFastCoder@RoKiPaRk/UOFastCoder
 ```
 
 ### 4. Document your database (one-time setup)
