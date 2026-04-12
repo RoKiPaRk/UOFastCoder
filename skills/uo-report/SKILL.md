@@ -2,7 +2,7 @@
 name: uo-report
 description: Generate a UniQuery report command and optional Python report script for a U2 Unidata or Universe file. Reads live DICT structure, builds a working LIST/SORT command with breaks and totals, runs it live to verify output, and writes the Python script.
 argument-hint: <FILE> [description] [--python-only]
-allowed-tools: [mcp__UOFastMCP__get_dict_items, mcp__UOFastMCP__query_file, mcp__UOFastMCP__execute_command, Read, Glob, Edit]
+allowed-tools: [mcp__UOFastMCP__get_dict_items, mcp__UOFastMCP__query_file, mcp__UOFastMCP__execute_command, Read, Glob, Write, Edit]
 ---
 
 # uo-report

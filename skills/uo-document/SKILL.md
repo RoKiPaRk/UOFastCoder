@@ -2,7 +2,7 @@
 name: uo-document
 description: Introspect U2 Unidata/Universe files and BASIC programs, then write persistent reference documentation — a schema map of all file structures and relationships, and a business logic summary of selected BASIC programs. Output is saved to docs/ and referenced in CLAUDE.md so every other skill can read it as memory.
 argument-hint: [FILE...] [--logic [PROG...]] [--bp <BP_FILE>] [--all]
-allowed-tools: [mcp__UOFastMCP__list_files, mcp__UOFastMCP__get_dict_items, mcp__UOFastMCP__read_bp_program, mcp__UOFastMCP__execute_command, mcp__UOFastMCP__query_file, Read, Glob, Edit]
+allowed-tools: [mcp__UOFastMCP__list_files, mcp__UOFastMCP__get_dict_items, mcp__UOFastMCP__read_bp_program, mcp__UOFastMCP__execute_command, mcp__UOFastMCP__query_file, Read, Glob, Write, Edit]
 ---
 
 # uo-document

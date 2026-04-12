@@ -2,7 +2,7 @@
 name: uo-python
 description: Generate a complete UopyModel, service layer, and Flask routes for a U2 Unidata file from a live DICT — OR translate an existing UniBasic program into equivalent Python code using the uopy library.
 argument-hint: <FILE> [--model-only] [--service-only] | --from-basic <PROG> <FILE> [--bp <BP_FILE>]
-allowed-tools: [mcp__UOFastMCP__get_dict_items, mcp__UOFastMCP__read_record, mcp__UOFastMCP__query_file, mcp__UOFastMCP__read_bp_program, Read, Glob, Edit]
+allowed-tools: [mcp__UOFastMCP__get_dict_items, mcp__UOFastMCP__read_record, mcp__UOFastMCP__query_file, mcp__UOFastMCP__read_bp_program, Read, Glob, Write, Edit]
 ---
 
 # uo-python

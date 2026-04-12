@@ -2,7 +2,7 @@
 name: uo-ui
 description: Generate a UOFastForms FormModel, Flask Blueprint, and Jinja2 HTML templates for a U2 Unidata file. Reads live DICT structure, infers field types and validators, and writes all three layers into the project.
 argument-hint: <FILE> [--form-only]
-allowed-tools: [mcp__UOFastMCP__get_dict_items, mcp__UOFastMCP__read_record, mcp__UOFastMCP__execute_command, Read, Glob, Edit]
+allowed-tools: [mcp__UOFastMCP__get_dict_items, mcp__UOFastMCP__read_record, mcp__UOFastMCP__execute_command, Read, Glob, Write, Edit]
 ---
 
 # uo-ui
