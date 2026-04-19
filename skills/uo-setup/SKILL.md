@@ -1,161 +1,96 @@
 ---
 name: uo-setup
-description: Log in to the developer's UOFastMCP server via /auth/login, retrieve the authenticated MCP connection config, and inject it into Claude Desktop (claude_desktop_config.json) and the project .mcp.json. Run once after starting UOFastMCP, or any time credentials change.
-argument-hint: [--url <server-url>] [--desktop] [--project] [--all]
-allowed-tools: [Read, Write, Edit, Bash]
+description: Verify the UOFastMCP server connection and walk through configuration if not connected. Run this first to confirm everything is working before using other UO skills.
+argument-hint: []
+allowed-tools: [mcp__UOFastMCP__list_files]
 ---
 
 # uo-setup
 
-Log in to UOFastMCP, get the authenticated MCP config, and write it to every Claude config location on this machine.
-
-## Arguments
-
-The user invoked this with: $ARGUMENTS
-
-Parse as: `[--url <server-url>] [--desktop] [--project] [--all]`
-
-- `--url` — UOFastMCP server base URL (default: `http://localhost:8000`)
-- `--desktop` — write to Claude Desktop `claude_desktop_config.json` only
-- `--project` — write to project `.mcp.json` only
-- `--all` — write to both (default when no target flag is given)
-
-## Examples
-
-```
-/uo-setup
-/uo-setup --url http://myserver:8000
-/uo-setup --desktop
-/uo-setup --project
-```
-
----
+Check that the UOFastMCP server is reachable and the credentials are correct. If connected, confirm and show the account. If not, give exact steps to fix it.
 
 ## Steps
 
-### Step 1 — Resolve the server URL
+### Step 1 — Test the connection
 
-If `--url` was given, use that value. Otherwise default to `http://localhost:8000`.
+Call `mcp__UOFastMCP__list_files`.
 
-Verify the server is reachable:
+**If the call succeeds:**
 
-```bash
-curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/health
+Tell the user:
+
+```
+✓ Connected to UOFastMCP
+  Files visible: <count from list_files>
+
+You're ready. Run /uo-document --all to build schema memory, then use any other UO skill.
 ```
 
-If the status code is not `200` (or the command errors), stop and tell the developer:
-> UOFastMCP is not reachable at `<url>`. Make sure the server is running (`uofast-mcp`) and try again.
+Stop here.
 
-### Step 2 — Get credentials
+---
 
-Check environment variables first:
+**If the call fails** (tool not found, auth error, connection refused, or any error):
 
-```bash
-echo "${UOFASTMCP_USERNAME:-}"
-echo "${UOFASTMCP_PASSWORD:-}"
-```
+Tell the user exactly what went wrong, then give the full fix sequence:
 
-If both are set, use them silently. If either is missing, ask the developer:
+---
 
-> Enter your UOFastMCP username:
-> Enter your UOFastMCP password:
+## If not connected — fix steps
 
-Do not log or display the password in any output.
+### Start the MCP server
 
-### Step 3 — Authenticate via `/auth/login`
-
-POST to the login endpoint:
+If not already running:
 
 ```bash
-curl -s -X POST "<server-url>/auth/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username": "<username>", "password": "<password>"}'
+pip install uofast-mcp      # first time only
+uofast-mcp                  # starts on http://localhost:8000
 ```
 
-Parse the JSON response. The response will contain a token. Handle both common shapes:
+### First-run setup wizard (if you haven't run it yet)
 
-| Field name | Use as |
-|---|---|
-| `token` | Bearer token |
-| `access_token` | Bearer token (OAuth2 style) |
-| `url` | Override SSE URL if present |
-| `mcp_url` | Full SSE URL if present (use as-is) |
+Open **http://localhost:8000/setup** in a browser.
+Complete all 5 steps. **Step 5 (Client Setup) shows the exact `claude mcp add` command to copy — credentials included.**
 
-If the response contains an HTTP error status or an `error` / `detail` field, stop and show the error message to the developer.
+### Register the server with Claude Code
 
-### Step 4 — Build the MCP server entry
+Copy the command from the wizard's CLI tab and run it in your terminal:
 
-Construct the `mcpServers.UOFastMCP` block:
+```bash
+claude mcp add --transport sse UOFastMCP http://localhost:8000/sse \
+  --header "Authorization: Basic <your-token-from-wizard>"
+```
+
+This saves the connection to `~/.claude/mcp.json` (local, applies to all projects).
+
+**For project-level config** (commit to source control so teammates can use it), create `.mcp.json` in your project root:
 
 ```json
 {
-  "url": "<server-url>/sse",
-  "headers": {
-    "Authorization": "Bearer <token>"
+  "mcpServers": {
+    "UOFastMCP": {
+      "url": "http://localhost:8000/sse",
+      "headers": {
+        "Authorization": "Basic <your-token-from-wizard>"
+      }
+    }
   }
 }
 ```
 
-- If the login response included a `url` or `mcp_url` field, use that as the `url` value instead of constructing it.
-- If the response has no token (server runs without auth), omit the `headers` block entirely and just use `{ "url": "<server-url>/sse" }`.
+> **Important:** The token must be a hardcoded Base64 string (`dXNlcjpwYXNz…`), not a shell variable like `${UOFASTMCP_USERNAME}`. Claude Code does not expand shell variables in `.mcp.json`.
 
-### Step 5 — Detect platform and resolve config paths
+### Restart the Claude Code session
 
-```bash
-if [ -n "$APPDATA" ]; then
-  echo "windows"
-  echo "$APPDATA/Claude/claude_desktop_config.json"
-elif [ "$(uname)" = "Darwin" ]; then
-  echo "macos"
-  echo "$HOME/Library/Application Support/Claude/claude_desktop_config.json"
-else
-  echo "linux"
-  echo "$HOME/.config/Claude/claude_desktop_config.json"
-fi
-```
+After running `claude mcp add` or saving `.mcp.json`, restart Claude Code so it picks up the new server.
+Then run `/uo-setup` again to confirm.
 
-Also resolve the project `.mcp.json`:
+### Get a fresh token if yours stopped working
+
+Your token is `base64(username:password)`. Generate one from the wizard's Client Setup page, or:
 
 ```bash
-echo "$(pwd)/.mcp.json"
+python -c "import base64; print(base64.b64encode(b'YOUR_USER:YOUR_PASSWORD').decode())"
 ```
 
-### Step 6 — Write Claude Desktop config (skip if `--project` only)
-
-Read the file at the resolved Desktop config path. If it does not exist, start from `{}`.
-
-Merge: set `mcpServers.UOFastMCP` to the entry from Step 4. Leave all other keys untouched.
-
-Write back with 2-space indentation.
-
-If the config directory itself does not exist, skip this target and note in the report that Claude Desktop does not appear to be installed.
-
-### Step 7 — Write project `.mcp.json` (skip if `--desktop` only)
-
-Read `.mcp.json` in the project root. If it does not exist, start from `{}`.
-
-Merge: set `mcpServers.UOFastMCP` to the entry from Step 4. Preserve all other `mcpServers` entries.
-
-Write back with 2-space indentation.
-
-This single file is read by both the Claude Code CLI and the Claude VSCode extension.
-
-### Step 8 — Report
-
-```
-UOFastMCP setup complete
-─────────────────────────────────────────────────────────────────
-Server          : <server-url>
-Authenticated   : yes (Bearer token) / no (open server)
-─────────────────────────────────────────────────────────────────
-Claude Desktop  : ✓  <desktop config path>
-Project .mcp.json : ✓  <project path>
-─────────────────────────────────────────────────────────────────
-```
-
-Use `–` for any target that was skipped.
-
-Reminders:
-- **Restart Claude Desktop** to pick up the Desktop config change.
-- The project `.mcp.json` is active immediately for new Claude Code / VSCode sessions.
-- Re-run `/uo-setup` if the UOFastMCP server restarts and issues a new token.
+Paste the output as the value after `Basic ` in the header.
