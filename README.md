@@ -7,56 +7,60 @@ Write BASIC programs, generate Python ORM code, build web forms, and create repo
 
 ## Quick Start
 
-### 1. Start the UOFastMCP server
+### 1. Install and start the MCP server
 
 ```bash
 pip install uofast-mcp
-uvicorn uofast_mcp.app:app --host 0.0.0.0 --port 8000
+uofast-mcp
 ```
 
-### 2. Create your user account (first run only)
+Server runs at `http://localhost:8000`.
 
-Open **http://localhost:8000/admin/setup** in a browser.
-Log in with `admin` / `changeme123!` and create your API user.
+### 2. Run the setup wizard (first run only)
 
-### 3. Connect Claude Code to it
+Open **http://localhost:8000/setup** in a browser and complete the 5-step wizard:
 
-Generate the Base64 credential string:
+| Step | What happens |
+|---|---|
+| Welcome | Prerequisites check |
+| Security | Set admin password + JWT secret |
+| Connection | Enter U2 host, user, password, account path — live test included |
+| Complete | Writes `.env` and `unidata_config.ini` |
+| **Client Setup** | **Shows the exact `claude mcp add` command to copy-paste** |
+
+The final step generates your credentials and config automatically — no manual Base64 encoding needed.
+
+### 3. Register the MCP server with Claude Code
+
+Copy the command from the wizard's **Client Setup** page. It looks like:
 
 ```bash
-python -c "import base64; print(base64.b64encode(b'YOUR_USER:YOUR_PASSWORD').decode())"
+claude mcp add --transport sse UOFastMCP http://localhost:8000/sse \
+  --header "Authorization: Basic <your-token>"
 ```
 
-Then add to `.mcp.json` in your project root:
+This stores the connection in your **local** Claude Code config (`~/.claude/mcp.json`).
+
+**For project-level config** (checked into source control for shared use), the wizard also shows a `.mcp.json` snippet — add it to your project root:
 
 ```json
 {
   "mcpServers": {
     "UOFastMCP": {
       "url": "http://localhost:8000/sse",
-      "headers": {
-        "Authorization": "Basic <paste-base64-string-here>"
-      }
+      "headers": { "Authorization": "Basic <your-token>" }
     }
   }
 }
 ```
 
-Or use the CLI (which handles encoding for you):
+### 4. Install the UOFastCoder plugin
 
-```bash
-claude mcp add --transport sse UOFastMCP http://localhost:8000/sse \
-  --header "Authorization: Basic <paste-base64-string-here>"
+Inside a Claude Code session (start with `claude` in your project):
+
 ```
-
-### 4. Install the plugin
-
-```bash
-# Step 1 — register the GitHub repo as a plugin marketplace (one-time)
-claude /plugin marketplace add RoKiPaRk/UOFastCoder
-
-# Step 2 — install the plugin from that marketplace
-claude /plugin install UOFastCoder@RoKiPaRk-UOFastCoder
+/plugin marketplace add RoKiPaRk/UOFastCoder
+/plugin install UOFastCoder
 ```
 
 ### 5. Document your database (one-time setup)
