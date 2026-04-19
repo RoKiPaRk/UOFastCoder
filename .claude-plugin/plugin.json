@@ -4,11 +4,6 @@
   "description": "AI-powered development tools for U2 Unidata and Universe databases. Generates UniBasic programs, Python UopyModel code, web forms, and reports from live DICT definitions via the UOFastMCP server.",
   "author": {
     "name": "RoKiPaRk",
-    "url": "https://github.com/RoKiPaRk"
-  },
-  "homepage": "https://github.com/RoKiPaRk/UOFastCoder",
-  "repository": "https://github.com/RoKiPaRk/UOFastCoder",
-  "license": "MIT",
-  "keywords": ["unidata", "universe", "u2", "uopy", "multivalue", "database"],
-  "skills": "./skills/"
+    "url": "https://github.com/RoKiPaRk/UOFastCoder"
+  }
 }
