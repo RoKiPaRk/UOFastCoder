@@ -35,19 +35,20 @@ The final step generates your credentials and config automatically — no manual
 Copy the command from the wizard's **Client Setup** page. It looks like:
 
 ```bash
-claude mcp add --transport sse UOFastMCP http://localhost:8000/sse \
+claude mcp add UOFastMCP http://localhost:8000/mcp \
   --header "Authorization: Basic <your-token>"
 ```
 
-This stores the connection in your **local** Claude Code config (`~/.claude/mcp.json`).
+This stores the connection in your local Claude Code config (`~/.claude.json`).
 
-**For project-level config** (checked into source control for shared use), the wizard also shows a `.mcp.json` snippet — add it to your project root:
+**For project-level config** (place in your project root; works for both CLI and the VSCode extension):
 
 ```json
 {
   "mcpServers": {
     "UOFastMCP": {
-      "url": "http://localhost:8000/sse",
+      "type": "http",
+      "url": "http://localhost:8000/mcp",
       "headers": { "Authorization": "Basic <your-token>" }
     }
   }
