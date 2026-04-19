@@ -63,7 +63,15 @@ Inside a Claude Code session (start with `claude` in your project):
 /plugin install UOFastCoder
 ```
 
-### 5. Document your database (one-time setup)
+### 5. Verify the connection
+
+```
+/uo-setup
+```
+
+Confirms the MCP server is reachable and credentials are correct. If anything is wrong it gives exact steps to fix it.
+
+### 6. Document your database (one-time setup)
 
 ```
 /uo-document --all
@@ -79,6 +87,7 @@ That's it. You're ready.
 
 | Command | What it does |
 |---|---|
+| `/uo-setup` | Verify MCP server connection; show fix steps if not connected |
 | `/uo-document [FILE...] [--logic [PROG...]] [--all]` | Build schema + business logic memory docs |
 | `/uo-explore <FILE>` | Explain a file's structure, fields, and relationships |
 | `/uo-basic <PROG> <FILE> [description]` | Write or modify a UniBasic program |
