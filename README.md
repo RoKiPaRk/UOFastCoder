@@ -52,7 +52,11 @@ claude mcp add --transport sse UOFastMCP http://localhost:8000/sse \
 ### 4. Install the plugin
 
 ```bash
-claude plugin install UOFastCoder@github:RoKiPaRk/UOFastCoder
+# Step 1 — register the GitHub repo as a plugin marketplace (one-time)
+claude /plugin marketplace add RoKiPaRk/UOFastCoder
+
+# Step 2 — install the plugin from that marketplace
+claude /plugin install UOFastCoder@RoKiPaRk-UOFastCoder
 ```
 
 ### 5. Document your database (one-time setup)
