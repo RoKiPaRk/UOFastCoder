@@ -11,39 +11,49 @@ Write BASIC programs, generate Python ORM code, build web forms, and create repo
 
 ```bash
 pip install uofast-mcp
-uofast-mcp
+uvicorn uofast_mcp.app:app --host 0.0.0.0 --port 8000
 ```
 
-Follow the setup wizard at `localhost:8000` to configure the U2 connection. See [UOFastMCP GitHub](https://github.com/RoKiPaRk/UOFastMCP) for full instructions.
+### 2. Create your user account (first run only)
 
-### 2. Connect Claude Code to it
+Open **http://localhost:8000/admin/setup** in a browser.
+Log in with `admin` / `changeme123!` and create your API user.
 
-Add to `.mcp.json` in your project root:
+### 3. Connect Claude Code to it
+
+Generate the Base64 credential string:
+
+```bash
+python -c "import base64; print(base64.b64encode(b'YOUR_USER:YOUR_PASSWORD').decode())"
+```
+
+Then add to `.mcp.json` in your project root:
 
 ```json
 {
   "mcpServers": {
     "UOFastMCP": {
-      "url": "http://localhost:8000/sse"
+      "url": "http://localhost:8000/sse",
+      "headers": {
+        "Authorization": "Basic <paste-base64-string-here>"
+      }
     }
   }
 }
 ```
 
-### 3. Install the plugin
+Or use the CLI (which handles encoding for you):
 
 ```bash
-claude plugin marketplace add https://github.com/RoKiPaRk/UOFastCoder.git
-claude plugin install UOFastCoder@RoKiPaRk/UOFastCoder
+claude mcp add --transport sse UOFastMCP http://localhost:8000/sse \
+  --header "Authorization: Basic <paste-base64-string-here>"
 ```
 
-### 4. Inject MCP settings (one-time setup)
+### 4. Install the plugin
 
+```bash
+claude plugin install UOFastCoder@github:RoKiPaRk/UOFastCoder
 ```
-/uo-setup
-```
-
-This fetches the connection config (URL + auth token) from your running UOFastMCP instance and writes it into Claude Desktop and your project `.mcp.json` automatically. Restart Claude Desktop once after running this.
 
 ### 5. Document your database (one-time setup)
 
@@ -61,7 +71,6 @@ That's it. You're ready.
 
 | Command | What it does |
 |---|---|
-| `/uo-setup [--desktop] [--project] [--all]` | Inject UOFastMCP connection config into Claude Desktop + `.mcp.json` |
 | `/uo-document [FILE...] [--logic [PROG...]] [--all]` | Build schema + business logic memory docs |
 | `/uo-explore <FILE>` | Explain a file's structure, fields, and relationships |
 | `/uo-basic <PROG> <FILE> [description]` | Write or modify a UniBasic program |
